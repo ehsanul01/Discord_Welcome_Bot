@@ -71,10 +71,11 @@ const welcomeCommand = new SlashCommandBuilder()
   .addSubcommand((s) =>
     s
       .setName("channel")
-      .setDescription("Set welcome channel")
+      .setDescription("Set the welcome channel")
       .addChannelOption((o) =>
         o
           .setName("channel")
+          .setDescription("Channel where welcome messages will be sent")
           .setRequired(true)
           .addChannelTypes(ChannelType.GuildText)
       )
@@ -83,40 +84,64 @@ const welcomeCommand = new SlashCommandBuilder()
   .addSubcommand((s) =>
     s
       .setName("message")
-      .setDescription("Set welcome message")
+      .setDescription("Set the welcome message template")
       .addStringOption((o) =>
-        o.setName("text").setRequired(true)
+        o
+          .setName("text")
+          .setDescription("Template: {user} {server} {memberCount} {username} {tag}")
+          .setRequired(true)
       )
   )
 
   .addSubcommand((s) =>
     s
       .setName("dm")
-      .setDescription("Enable/disable welcome DM")
+      .setDescription("Enable/disable welcome DM and optionally set DM message")
       .addBooleanOption((o) =>
-        o.setName("enabled").setRequired(true)
+        o
+          .setName("enabled")
+          .setDescription("Send a DM to new members?")
+          .setRequired(true)
       )
       .addStringOption((o) =>
-        o.setName("message").setRequired(false)
+        o
+          .setName("message")
+          .setDescription("Optional DM template (same placeholders as welcome)")
+          .setRequired(false)
       )
   )
 
   .addSubcommand((s) =>
     s
       .setName("autorole")
-      .setDescription("Set auto role")
+      .setDescription("Set or clear an auto-role for new members")
       .addRoleOption((o) =>
-        o.setName("role").setRequired(false)
+        o
+          .setName("role")
+          .setDescription("Role to assign to new members (leave empty to clear)")
+          .setRequired(false)
       )
   )
 
   .addSubcommand((s) =>
-    s.setName("toggle").setDescription("Enable/disable welcome system")
+    s
+      .setName("toggle")
+      .setDescription("Enable/disable the welcome system for this server")
   )
 
   .addSubcommand((s) =>
-    s.setName("config").setDescription("Show config")
+    s
+      .setName("config")
+      .setDescription("Show the current welcome configuration")
   );
+
+/* ===================== DEPLOY COMMAND ===================== */
+const rest = new REST({ version: "10" }).setToken(TOKEN);
+await rest.put(Routes.applicationCommands(CLIENT_ID), {
+  body: [welcomeCommand.toJSON()],
+});
+console.log("Slash command deployed");
+
 
 /* ===================== DEPLOY COMMAND ===================== */
 const rest = new REST({ version: "10" }).setToken(TOKEN);
