@@ -135,13 +135,6 @@ const welcomeCommand = new SlashCommandBuilder()
       .setDescription("Show the current welcome configuration")
   );
 
-/* ===================== DEPLOY COMMAND ===================== */
-const rest = new REST({ version: "10" }).setToken(TOKEN);
-await rest.put(Routes.applicationCommands(CLIENT_ID), {
-  body: [welcomeCommand.toJSON()],
-});
-console.log("Slash command deployed");
-
 
 /* ===================== DEPLOY COMMAND ===================== */
 const rest = new REST({ version: "10" }).setToken(TOKEN);
@@ -149,10 +142,9 @@ await rest.put(Routes.applicationCommands(CLIENT_ID), {
   body: [welcomeCommand.toJSON()],
 });
 console.log("Slash command deployed");
-
 /* ===================== EVENTS ===================== */
 client.once("ready", () => {
-  console.log(`🤖 Logged in as ${client.user.tag}`);
+  console.log(` Logged in as ${client.user.tag}`);
 });
 
 client.on("interactionCreate", async (interaction) => {
